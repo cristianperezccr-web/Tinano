@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tinano</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #f4f4f4;
+}
+
+/* TOPBAR */
+.topbar {
+    background: green;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ICONO CARRITO */
+.cart-icon {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 7px;
+    font-size: 12px;
+}
+
+/* BOTONES */
+.topbar button {
+    background: white;
+    color: green;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* OVERLAY */
+#overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#overlay.active {
+    display: block;
+}
+
+/* MENU */
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+/* CARRITO */
+.cart {
+    position: fixed;
+    right: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    transition: 0.3s;
+    box-shadow: -5px 0 10px rgba(0,0,0,0.2);
+}
+
+.cart.active {
+    right: 0;
+}
+
+/* GRID */
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+/* TARJETAS */
+.popup {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+}
+
+img {
+    width: 100%;
+}
+
+button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background: green;
+    color: white;
+    border: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .contenedor {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .contenedor {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- OVERLAY -->
+<div id="overlay" onclick="cerrarTodo()"></div>
+
+<!-- TOP -->
+<div class="topbar">
+    <button onclick="toggleMenu()">☰</button>
+    <h2>Tienda</h2>
+
+    <div class="cart-icon">
+        <button onclick="toggleCart()">🛒</button>
+        <span id="contador" class="cart-count">0</span>
+    </div>
+</div>
+
+<!-- MENU -->
+<div class="sidebar" id="menu">
+    <button onclick="toggleMenu()">❌</button>
+    <h3>Secciones</h3>
+    <a href="#frutas" onclick="cerrarTodo()">Frutas y Verduras</a>
+    <a href="#carnes" onclick="cerrarTodo()">Carnes</a>
+</div>
+
+<!-- CARRITO -->
+<div class="cart" id="carritoBox">
+    <button onclick="toggleCart()">❌</button>
+    <h3>🛒 Carrito</h3>
+
+    <div id="carrito"></div>
+
+    <p><strong>Total: $<span id="totalCarrito">0</span></strong></p>
+
+    <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
+</div>
+
+<!-- CONTENIDO -->
+<section id="frutas">
+<h2 style="text-align:center;">Frutas y Verduras</h2>
+
+<div class="contenedor">
+
+<div class="popup">
+<h3>Tomates</h3>
+<img src="https://caracoltv.brightspotcdn.com/dims4/default/eeac6a4/2147483647/strip/true/crop/1280x719+0+1/resize/568x319!/quality/75/?url=https://caracol-brightspot.s3.us-west-2.amazonaws.com/fc/ee/e3992e7f439182b80450e9bb1a00/diseno-cms-26.jpg">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Tomates',3000)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Cebolla</h3>
+<img src="https://sembrandoconfianza.com/wp-content/uploads/2022/04/Cebolla-Cabezona-Blanca.jpg">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Cebolla',3500)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Pepino</h3>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL-W-9hmIvzdL_HJ9GKmoiT47DAPughreynw&s">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Pepino',2000)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Papa</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Patates.jpg">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Papa',2500)">Agregar</button>
+</div>
+
+</div>
+</section>
+
+<section id="carnes">
+<h2 style="text-align:center;">Carnes</h2>
+
+<div class="contenedor">
+
+<div class="popup">
+<h3>Pollo</h3>
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8DBTjotRTG0HLA51Uz8Cs-6SNUk1_xQz4wQ&s">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Pollo',8000)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Res</h3>
+<img src="https://www.cocinista.es/download/bancorecursos/recetas/cocinar-la-carne-de-vacuno.jpg">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Res',12000)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Cerdo</h3>
+<img src="">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Cerdo',10000)">Agregar</button>
+</div>
+
+<div class="popup">
+<h3>Pescado</h3>
+<img src="">
+<input type="number" placeholder="Kilos">
+<button onclick="agregar(this,'Pescado',9000)">Agregar</button>
+</div>
+
+</div>
+</section>
+
+<script>
+let carrito = [];
+
+/* MENU */
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("active");
+}
+
+/* CARRITO */
+function toggleCart() {
+    document.getElementById("carritoBox").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("active");
+}
+
+/* CERRAR TODO */
+function cerrarTodo() {
+    document.getElementById("menu").classList.remove("active");
+    document.getElementById("carritoBox").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+}
+
+/* AGREGAR */
+function agregar(boton, nombre, precio) {
+    let cont = boton.parentElement;
+    let kilos = parseFloat(cont.querySelector("input").value);
+
+    if (!kilos || kilos <= 0) return alert("Cantidad inválida");
+
+    let prod = carrito.find(p => p.nombre === nombre);
+
+    if (prod) {
+        prod.kilos += kilos;
+        prod.total += kilos * precio;
+    } else {
+        carrito.push({nombre, kilos, total: kilos * precio});
+    }
+
+    actualizar();
+    toggleCart(); // 🔥 abre carrito automáticamente
+}
+
+/* ELIMINAR */
+function eliminar(i) {
+    carrito.splice(i,1);
+    actualizar();
+}
+
+/* VACIAR */
+function vaciarCarrito() {
+    carrito = [];
+    actualizar();
+}
+
+/* ACTUALIZAR */
+function actualizar() {
+    let div = document.getElementById("carrito");
+    let total = 0;
+    let cantidad = 0;
+
+    div.innerHTML = "";
+
+    carrito.forEach((p,i)=>{
+        total += p.total;
+        cantidad += p.kilos;
+
+        div.innerHTML += `
+        <p>${p.nombre} ${p.kilos}kg = $${p.total}
+        <button onclick="eliminar(${i})">❌</button></p>`;
+    });
+
+    document.getElementById("totalCarrito").innerText = total;
+    document.getElementById("contador").innerText = cantidad;
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+/* CARGAR */
+window.onload = ()=>{
+    let data = localStorage.getItem("carrito");
+    if(data){
+        carrito = JSON.parse(data);
+        actualizar();
+    }
+}
+</script>
+
+</body>
+</html>
