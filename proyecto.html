@@ -2,335 +2,498 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tinano</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🍬 Tinano - Supermercado</title>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #f4f4f4;
-}
+body{margin:0;font-family:'Segoe UI';background:#eef2f3;color:#111;transition:.3s}
+body.dark{background:#121212;color:#00a844}
 
-/* TOPBAR */
-.topbar {
-    background: green;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* HEADER */
+header{background:#009624;color:white;padding:15px;text-align:center;font-size:24px;position:relative}
+header button{position:absolute;top:10px;background:#007d33;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer}
+#menuToggle{left:10px}
+#darkToggle{right:10px}
+#cartToggle{right:80px}
 
-/* ICONO CARRITO */
-.cart-icon {
-    position: relative;
-}
-
-.cart-count {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background: red;
-    color: white;
-    border-radius: 50%;
-    padding: 3px 7px;
-    font-size: 12px;
-}
-
-/* BOTONES */
-.topbar button {
-    background: white;
-    color: green;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-}
-
-/* OVERLAY */
-#overlay {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-}
-
-#overlay.active {
-    display: block;
-}
+/* BUSCADOR */
+#buscador{width:60%;padding:10px;border-radius:10px;border:1px solid #ccc}
 
 /* MENU */
-.sidebar {
-    position: fixed;
-    left: -250px;
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background: #2c3e50;
-    color: white;
-    padding: 20px;
-    transition: 0.3s;
-}
-
-.sidebar.active {
-    left: 0;
-}
-
-/* CARRITO */
-.cart {
-    position: fixed;
-    right: -300px;
-    top: 0;
-    width: 300px;
-    height: 100%;
-    background: white;
-    padding: 20px;
-    transition: 0.3s;
-    box-shadow: -5px 0 10px rgba(0,0,0,0.2);
-}
-
-.cart.active {
-    right: 0;
-}
+.menu{position:fixed;left:-200px;top:60px;width:180px;background:#00c853;padding:12px;border-radius:0 10px 10px 0;transition:.3s;z-index:999}
+.menu.open{left:0}
+.menu a{display:block;margin:8px 0;background:#009624;color:white;padding:8px;border-radius:8px;text-decoration:none;text-align:center}
 
 /* GRID */
-.contenedor {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-}
+.contenedor{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
 
-/* TARJETAS */
-.popup {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-}
+/* PRODUCTOS */
+.popup{background:white;border-radius:12px;padding:12px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+body.dark .popup{background:#1e1e1e}
+.popup img{width:100%;height:150px;object-fit:cover;border-radius:8px;margin-bottom:8px}
 
-img {
-    width: 100%;
-}
+/* BOTONES */
+button{background:#00c853;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;margin-top:5px}
 
-button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    background: green;
-    color: white;
-    border: none;
-}
+/* CARRITO */
+#carritoBox{position:fixed;right:-300px;top:80px;background:white;padding:12px;border-radius:12px;width:260px;box-shadow:0 4px 12px rgba(0,0,0,.1);transition:.3s;z-index:999}
+#carritoBox.open{right:20px}
+body.dark #carritoBox{background:#1e1e1e;color:#00a844}
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-    .contenedor {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+select,input{margin:4px;padding:4px;border-radius:6px;border:1px solid #ccc}
+li{margin-bottom:5px}
+.eliminar{background:red;padding:2px 6px;margin-left:5px;border-radius:5px}
 
-@media (max-width: 500px) {
-    .contenedor {
-        grid-template-columns: 1fr;
-    }
-}
+/* CONTADOR */
+#contador{background:red;border-radius:50%;padding:2px 6px;font-size:12px;margin-left:5px}
+
+/* USD BADGE */
+.usd-precio{font-size:12px;color:#007d33;font-weight:bold;margin-top:2px}
+body.dark .usd-precio{color:#00e676}
+
+/* TASA INFO */
+#tasaInfo{text-align:center;padding:8px;background:#e8f5e9;font-size:13px;color:#2e7d32;border-bottom:1px solid #c8e6c9}
+body.dark #tasaInfo{background:#1a3a1a;color:#69f0ae;border-color:#2e7d32}
+
+/* ANIMACIONES */
+button,.menu a,.popup{transition:.25s}
+button:hover{background:#00e676;transform:translateY(-3px) scale(1.05);box-shadow:0 6px 15px rgba(0,0,0,.2)}
+.menu a:hover{background:#00e676;transform:translateX(5px) scale(1.05)}
+.popup:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+
+/* POR QUE ELEGIRNOS */
+#porque{background:white;padding:40px 20px;text-align:center;margin-top:20px}
+body.dark #porque{background:#1e1e1e}
+#porque h2{color:#009624;font-size:28px;margin-bottom:30px}
+.razones{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1100px;margin:0 auto}
+.razon{background:#f1f8f1;border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.07);transition:.25s}
+.razon:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+body.dark .razon{background:#2a2a2a}
+.razon .icono{font-size:36px;margin-bottom:10px}
+.razon h3{color:#009624;margin:8px 0}
+.razon p{font-size:14px;color:#555;margin:0}
+body.dark .razon p{color:#aaa}
+
+/* VIDEO SECTION */
+#video-section{background:#e8f5e9;padding:40px 20px;text-align:center;margin-top:10px}
+body.dark #video-section{background:#162016}
+#video-section h2{color:#009624;font-size:26px;margin-bottom:20px}
+#video-section iframe{width:100%;max-width:800px;height:450px;border-radius:16px;border:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
+/* FOOTER */
+footer{background:#009624;color:white;text-align:center;padding:16px;font-size:14px;margin-top:20px}
 </style>
 </head>
 
 <body>
 
-<!-- OVERLAY -->
-<div id="overlay" onclick="cerrarTodo()"></div>
+<header>
+  <button id="menuToggle">☰</button>
+  🍬 Tinano
+  <button id="cartToggle">🛒 <span id="contador">0</span></button>
+  <button id="darkToggle">🌙</button>
+</header>
 
-<!-- TOP -->
-<div class="topbar">
-    <button onclick="toggleMenu()">☰</button>
-    <h2>Tienda</h2>
+<div id="tasaInfo">💱 Cargando tasa de cambio USD...</div>
 
-    <div class="cart-icon">
-        <button onclick="toggleCart()">🛒</button>
-        <span id="contador" class="cart-count">0</span>
+<div style="padding:15px;text-align:center">
+  <input type="text" id="buscador" placeholder="🔍 Buscar producto...">
+</div>
+
+<nav class="menu" id="menuBox">
+  <a href="#verduras">🥦 Verduras</a>
+  <a href="#frutas">🍎 Frutas</a>
+  <a href="#pollo">🍗 Pollo</a>
+  <a href="#res">🥩 Res</a>
+  <a href="#lacteos">🥛 Lácteos</a>
+  <a href="#pan">🥖 Panadería</a>
+</nav>
+
+<div id="carritoBox">
+  <h3>🛒 Carrito</h3>
+  <ul id="lista"></ul>
+  <strong>Total: $<span id="total">0</span></strong>
+</div>
+
+<main>
+
+<!-- VERDURAS -->
+<section id="verduras"><h2 style="padding-left:20px">🥦 Verduras</h2><div class="contenedor">
+
+  <div class="popup" data-precio="3000">
+    <h3>Tomate</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg">
+    <p class="precio">$3000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Tomate',3000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="3500">
+    <h3>Cebolla</h3>
+    <img src="https://th.bing.com/th/id/R.06abbcf11f0dfd1efbf9b265c8970ecc?rik=ksxID4Ls8eBZ8A&riu=http%3a%2f%2ffrutiq.com.co%2fcdn%2fshop%2ffiles%2fshutterstock_1994901140.jpg%3fv%3d1685063158&ehk=TNVn%2f764G1UfBS8CIB15GxPsnVg7eAHiEJEYy9CU5KY%3d&risl=&pid=ImgRaw&r=0">
+    <p class="precio">$3500/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Cebolla',3500)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="4000">
+    <h3>Papa</h3>
+    <img src="https://tse4.mm.bing.net/th/id/OIP.NX844v_LMc6yV3GRlJCu6gHaHa?rs=1&pid=ImgDetMain&o=7&rm=3">
+    <p class="precio">$4000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Papa',4000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="2500">
+    <h3>Zanahoria</h3>
+    <img src="https://tse3.mm.bing.net/th/id/OIP.wkzvVsLA8D6oaF_IIawt-gHaF8?rs=1&pid=ImgDetMain&o=7&rm=3">
+    <p class="precio">$2500/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Zanahoria',2500)">Agregar</button>
+  </div>
+
+</div></section>
+
+<!-- FRUTAS -->
+<section id="frutas"><h2 style="padding-left:20px">🍎 Frutas</h2><div class="contenedor">
+
+  <div class="popup" data-precio="5500">
+    <h3>Mandarina</h3>
+    <img src="https://www.industriaalimentaria.org/public/uploads/images/mandarina%20revista.jpg">
+    <p class="precio">$5500/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Mandarina',5500)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="6000">
+    <h3>Mango</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Hapus_Mango.jpg">
+    <p class="precio">$6000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Mango',6000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="4500">
+    <h3>Banano</h3>
+    <img src="https://d31f1ehqijlcua.cloudfront.net/n/7/0/7/e/707eaacad7c7ac084f4717d3ac11661751dcbd3f_FruitsandVegetables_288055_01.jpg">
+    <p class="precio">$4500/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Banano',4500)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="7000">
+    <h3>Fresa</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Garden_strawberry_%28Fragaria_%C3%97_ananassa%29_single2.jpg">
+    <p class="precio">$7000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Fresa',7000)">Agregar</button>
+  </div>
+
+</div></section>
+
+<!-- POLLO -->
+<section id="pollo"><h2 style="padding-left:20px">🍗 Pollo</h2><div class="contenedor">
+
+  <div class="popup" data-precio="12000">
+    <h3>Pechuga de Pollo</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQt_6tqeDXShk5NDsjRfqDLTjzKfTu7ReXg&s">
+    <p class="precio">$12000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Pechuga de Pollo',12000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="10000">
+    <h3>Muslo de Pollo</h3>
+    <img src="https://megatiendas.vtexassets.com/arquivos/ids/167210/LB4657.jpg?v=638442982227100000">
+    <p class="precio">$10000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Muslo de Pollo',10000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="9000">
+    <h3>Alas de Pollo</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL5M1C2TU5NE4yptlMoSD-uZAR6wKn0ThcKA&s">
+    <p class="precio">$9000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Alas de Pollo',9000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="14000">
+    <h3>Pollo Entero</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8DBTjotRTG0HLA51Uz8Cs-6SNUk1_xQz4wQ&s">
+    <p class="precio">$14000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Pollo Entero',14000)">Agregar</button>
+  </div>
+
+</div></section>
+
+<!-- RES -->
+<section id="res"><h2 style="padding-left:20px">🥩 Res</h2><div class="contenedor">
+
+  <div class="popup" data-precio="28000">
+    <h3>Lomo de Res</h3>
+    <img src="https://static.wixstatic.com/media/91fc24_69bbc618815040eeb04c3274cbc1b68f~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/91fc24_69bbc618815040eeb04c3274cbc1b68f~mv2.png">
+    <p class="precio">$28000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Lomo de Res',28000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="22000">
+    <h3>Carne Molida</h3>
+    <img src="https://canadabeef.mx/wp-content/uploads/2020/09/carne_molida_hamburguesas-1-495x371.jpg">
+    <p class="precio">$22000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Carne Molida',22000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="25000">
+    <h3>Costilla de Res</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0MQiV1WeLCQ-0zKwHgMgIiIo1pSP3lYJ2MQ&s">
+    <p class="precio">$25000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Costilla de Res',25000)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="18000">
+    <h3>Hígado de Res</h3>
+    <img src="https://a.storyblok.com/f/160385/817ee7cc2c/higado_blog.jpg/m/filters:quality(70)/">
+    <p class="precio">$18000/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Hígado de Res',18000)">Agregar</button>
+  </div>
+
+</div></section>
+
+<!-- LACTEOS -->
+<section id="lacteos"><h2 style="padding-left:20px">🥛 Lácteos</h2><div class="contenedor">
+
+  <div class="popup" data-precio="4200">
+    <h3>Leche Entera</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Milk_glass.jpg">
+    <p class="precio">$4200/L</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">L</option><option value="lb">500ml</option></select>
+    <button onclick="agregar(this,'Leche Entera',4200)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="9500">
+    <h3>Queso Campesino</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkkmvLKBgtkivysFy8auohApQ4AgD4WMNE3g&s">
+    <p class="precio">$9500/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Queso Campesino',9500)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="6800">
+    <h3>Yogurt Natural</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8uGydrOyap30t_nXZWlzwQpgjm0lPTWnZDQ&s">
+    <p class="precio">$6800/kg</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">kg</option><option value="lb">lb</option></select>
+    <button onclick="agregar(this,'Yogurt Natural',6800)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="5500">
+    <h3>Mantequilla</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRXZhbx0ZaqlmPffsTn4tpfxPYcLzrxOkeFA&s">
+    <p class="precio">$5500/250g</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">250g</option><option value="lb">500g</option></select>
+    <button onclick="agregar(this,'Mantequilla',5500)">Agregar</button>
+  </div>
+
+</div></section>
+
+<!-- PANADERIA -->
+<section id="pan"><h2 style="padding-left:20px">🥖 Panadería</h2><div class="contenedor">
+
+  <div class="popup" data-precio="3500">
+    <h3>Pan Baguette</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SwWuaLPjSZbZR5ouyneVKiCxXvpfymLuEw&s">
+    <p class="precio">$3500/und</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">und</option><option value="lb">x3</option></select>
+    <button onclick="agregar(this,'Pan Baguette',3500)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="2800">
+    <h3>Pandebono</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLB0lwmfmgiiEk0lNaKoNM5-I1Y-WGn3ghwA&s">
+    <p class="precio">$2800/und</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">und</option><option value="lb">x6</option></select>
+    <button onclick="agregar(this,'Pandebono',2800)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="4200">
+    <h3>Croissant</h3>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrIQeCfGwzJHwunDlXZ-F_veZHrUKcKLzdZw&s">
+    <p class="precio">$4200/und</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">und</option><option value="lb">x4</option></select>
+    <button onclick="agregar(this,'Croissant',4200)">Agregar</button>
+  </div>
+
+  <div class="popup" data-precio="5000">
+    <h3>Torta de Choclo</h3>
+    <img src="https://www.afuegolento.com/img_db/varios/2021/04/img-608bb0d7e6d7a.jpg">
+    <p class="precio">$5000/und</p><div class="usd-precio">Cargando USD...</div>
+    <input type="number" value="1">
+    <select onchange="actualizarPrecio(this)"><option value="kg">und</option><option value="lb">x2</option></select>
+    <button onclick="agregar(this,'Torta de Choclo',5000)">Agregar</button>
+  </div>
+
+</div></section>
+
+</main>
+
+<!-- POR QUE ELEGIRNOS -->
+<section id="porque">
+  <h2>⭐ ¿Por qué elegir Tinano?</h2>
+  <div class="razones">
+
+    <div class="razon">
+      <div class="icono">🥬</div>
+      <h3>Productos Frescos</h3>
+      <p>Recibimos frutas, verduras y carnes frescas todos los días directamente de los productores locales.</p>
     </div>
-</div>
 
-<!-- MENU -->
-<div class="sidebar" id="menu">
-    <button onclick="toggleMenu()">❌</button>
-    <h3>Secciones</h3>
-    <a href="#frutas" onclick="cerrarTodo()">Frutas y Verduras</a>
-    <a href="#carnes" onclick="cerrarTodo()">Carnes</a>
-</div>
+    <div class="razon">
+      <div class="icono">💰</div>
+      <h3>Mejores Precios</h3>
+      <p>Trabajamos con márgenes justos para ofrecerte los precios más competitivos del mercado, sin sacrificar calidad.</p>
+    </div>
 
-<!-- CARRITO -->
-<div class="cart" id="carritoBox">
-    <button onclick="toggleCart()">❌</button>
-    <h3>🛒 Carrito</h3>
+    <div class="razon">
+      <div class="icono">💱</div>
+      <h3>Precios en Tiempo Real</h3>
+      <p>Mostramos el equivalente en dólares actualizado al instante con la tasa de cambio real, para que compres con total transparencia.</p>
+    </div>
 
-    <div id="carrito"></div>
+    <div class="razon">
+      <div class="icono">🚚</div>
+      <h3>Entrega a Domicilio</h3>
+      <p>Realizamos entregas a domicilio rápidas y seguras. Tu pedido llega fresco directo a tu puerta.</p>
+    </div>
 
-    <p><strong>Total: $<span id="totalCarrito">0</span></strong></p>
+    <div class="razon">
+      <div class="icono">🌱</div>
+      <h3>Apoyo Local</h3>
+      <p>Comprando en Tinano apoyás a pequeños agricultores y productores de tu región. Juntos crecemos más.</p>
+    </div>
 
-    <button onclick="vaciarCarrito()">🗑️ Vaciar carrito</button>
-</div>
+    <div class="razon">
+      <div class="icono">📱</div>
+      <h3>Fácil de Usar</h3>
+      <p>Nuestra tienda en línea es intuitiva, rápida y funciona perfecto en celular o computadora, de día o de noche.</p>
+    </div>
 
-<!-- CONTENIDO -->
-<section id="frutas">
-<h2 style="text-align:center;">Frutas y Verduras</h2>
-
-<div class="contenedor">
-
-<div class="popup">
-<h3>Tomates</h3>
-<img src="https://caracoltv.brightspotcdn.com/dims4/default/eeac6a4/2147483647/strip/true/crop/1280x719+0+1/resize/568x319!/quality/75/?url=https://caracol-brightspot.s3.us-west-2.amazonaws.com/fc/ee/e3992e7f439182b80450e9bb1a00/diseno-cms-26.jpg">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Tomates',3000)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Cebolla</h3>
-<img src="https://sembrandoconfianza.com/wp-content/uploads/2022/04/Cebolla-Cabezona-Blanca.jpg">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Cebolla',3500)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Pepino</h3>
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL-W-9hmIvzdL_HJ9GKmoiT47DAPughreynw&s">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Pepino',2000)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Papa</h3>
-<img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Patates.jpg">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Papa',2500)">Agregar</button>
-</div>
-
-</div>
+  </div>
 </section>
 
-<section id="carnes">
-<h2 style="text-align:center;">Carnes</h2>
-
-<div class="contenedor">
-
-<div class="popup">
-<h3>Pollo</h3>
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8DBTjotRTG0HLA51Uz8Cs-6SNUk1_xQz4wQ&s">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Pollo',8000)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Res</h3>
-<img src="https://www.cocinista.es/download/bancorecursos/recetas/cocinar-la-carne-de-vacuno.jpg">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Res',12000)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Cerdo</h3>
-<img src="">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Cerdo',10000)">Agregar</button>
-</div>
-
-<div class="popup">
-<h3>Pescado</h3>
-<img src="">
-<input type="number" placeholder="Kilos">
-<button onclick="agregar(this,'Pescado',9000)">Agregar</button>
-</div>
-
-</div>
+<!-- VIDEO -->
+<section id="video-section">
+  <h2>🎬 Conoce Tinano en Video</h2>
+  <iframe
+    src="https://www.youtube.com/embed/dHzNJF5R-cs"
+    title="Supermercado Tinano"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
 </section>
+
+<footer>🍬 Tinano Supermercado &nbsp;|&nbsp; Frescos cada día &nbsp;|&nbsp; © 2025</footer>
 
 <script>
-let carrito = [];
+let total=0, contador=0, tasaUSD=0;
 
-/* MENU */
-function toggleMenu() {
-    document.getElementById("menu").classList.toggle("active");
-    document.getElementById("overlay").classList.toggle("active");
+document.getElementById("menuToggle").onclick = () => document.getElementById("menuBox").classList.toggle("open");
+document.getElementById("darkToggle").onclick = () => document.body.classList.toggle("dark");
+document.getElementById("cartToggle").onclick = () => document.getElementById("carritoBox").classList.toggle("open");
+
+// BUSCADOR
+document.getElementById("buscador").addEventListener("keyup", () => {
+  let f = document.getElementById("buscador").value.toLowerCase();
+  document.querySelectorAll(".popup").forEach(p => {
+    p.style.display = p.querySelector("h3").textContent.toLowerCase().includes(f) ? "block" : "none";
+  });
+});
+
+// API USD — tasa COP → USD en tiempo real
+fetch("https://api.exchangerate-api.com/v4/latest/COP")
+  .then(r => r.json())
+  .then(d => {
+    tasaUSD = d.rates.USD;
+    document.getElementById("tasaInfo").innerHTML =
+      `💱 Tasa de cambio en tiempo real: <strong>1 COP = ${tasaUSD.toFixed(6)} USD</strong> (1 USD ≈ ${Math.round(1/tasaUSD).toLocaleString("es-CO")} COP)`;
+    actualizarTodosUSD();
+  })
+  .catch(() => {
+    document.getElementById("tasaInfo").textContent = "⚠️ No se pudo cargar la tasa de cambio.";
+  });
+
+function actualizarTodosUSD() {
+  document.querySelectorAll(".popup").forEach(p => {
+    let cop = parseFloat(p.dataset.precio);
+    let usd = (cop * tasaUSD).toFixed(2);
+    p.querySelector(".usd-precio").textContent = `≈ $${usd} USD`;
+  });
 }
 
-/* CARRITO */
-function toggleCart() {
-    document.getElementById("carritoBox").classList.toggle("active");
-    document.getElementById("overlay").classList.toggle("active");
+function actualizarPrecio(sel) {
+  let p = sel.parentElement;
+  let base = parseFloat(p.dataset.precio);
+  let txt = p.querySelector(".precio");
+  let usdDiv = p.querySelector(".usd-precio");
+  if (sel.value == "lb") {
+    txt.innerHTML = `$${(base/2).toFixed(0)}/lb`;
+    if (tasaUSD) usdDiv.textContent = `≈ $${((base/2)*tasaUSD).toFixed(2)} USD`;
+  } else {
+    txt.innerHTML = `$${base}/kg`;
+    if (tasaUSD) usdDiv.textContent = `≈ $${(base*tasaUSD).toFixed(2)} USD`;
+  }
 }
 
-/* CERRAR TODO */
-function cerrarTodo() {
-    document.getElementById("menu").classList.remove("active");
-    document.getElementById("carritoBox").classList.remove("active");
-    document.getElementById("overlay").classList.remove("active");
+function agregar(btn, nombre, precio) {
+  let p = btn.parentElement;
+  let c = parseFloat(p.querySelector("input").value);
+  let t = p.querySelector("select").value;
+  let pf = t == "lb" ? precio / 2 : precio;
+  let sub = c * pf;
+
+  total += sub; contador++;
+
+  let li = document.createElement("li");
+  li.innerHTML = `${nombre} ${c}${t} $${sub.toFixed(0)} <button class="eliminar" onclick="eliminar(this,${sub})">X</button>`;
+  document.getElementById("lista").appendChild(li);
+
+  document.getElementById("total").textContent = total.toFixed(0);
+  document.getElementById("contador").textContent = contador;
 }
 
-/* AGREGAR */
-function agregar(boton, nombre, precio) {
-    let cont = boton.parentElement;
-    let kilos = parseFloat(cont.querySelector("input").value);
-
-    if (!kilos || kilos <= 0) return alert("Cantidad inválida");
-
-    let prod = carrito.find(p => p.nombre === nombre);
-
-    if (prod) {
-        prod.kilos += kilos;
-        prod.total += kilos * precio;
-    } else {
-        carrito.push({nombre, kilos, total: kilos * precio});
-    }
-
-    actualizar();
-    toggleCart(); // 🔥 abre carrito automáticamente
-}
-
-/* ELIMINAR */
-function eliminar(i) {
-    carrito.splice(i,1);
-    actualizar();
-}
-
-/* VACIAR */
-function vaciarCarrito() {
-    carrito = [];
-    actualizar();
-}
-
-/* ACTUALIZAR */
-function actualizar() {
-    let div = document.getElementById("carrito");
-    let total = 0;
-    let cantidad = 0;
-
-    div.innerHTML = "";
-
-    carrito.forEach((p,i)=>{
-        total += p.total;
-        cantidad += p.kilos;
-
-        div.innerHTML += `
-        <p>${p.nombre} ${p.kilos}kg = $${p.total}
-        <button onclick="eliminar(${i})">❌</button></p>`;
-    });
-
-    document.getElementById("totalCarrito").innerText = total;
-    document.getElementById("contador").innerText = cantidad;
-
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-}
-
-/* CARGAR */
-window.onload = ()=>{
-    let data = localStorage.getItem("carrito");
-    if(data){
-        carrito = JSON.parse(data);
-        actualizar();
-    }
+function eliminar(b, v) {
+  b.parentElement.remove();
+  total -= v; contador--;
+  document.getElementById("total").textContent = total.toFixed(0);
+  document.getElementById("contador").textContent = contador;
 }
 </script>
 
